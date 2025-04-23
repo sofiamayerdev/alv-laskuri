@@ -27,30 +27,3 @@ Helppo ja tehokas verkkotyökalu arvonlisäveron (ALV) laskemiseen suomalaisilla
    git clone https://github.com/sofiamayerdev/alv-laskuri.git
    cd alv-laskuri
    # Avaa index.html selaimessa
-
-Teknologiat
-HTML5 semanttisella rakenteella
-
-CSS3 inline-tyyleinä
-
-JavaScript laskentalogiikkaan
-
-LocalStorage tulosten tallennukseen
-
-📝 Lisenssi
-Tämä projekti on lisensoitu MIT-lisenssillä.
-
-🔗 Linkit
-Live Demo
-
-Issue Tracker
-
-Wiki (tulee)
-
-💡 Ota Yhteyttä
-GitHub: @sofiamayerdev
-
-Twitter/X: @sofiamayer_dev
-
-Reddit: u/sofiamayer_dev
-   
