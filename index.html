@@ -21,7 +21,131 @@
 </head>
 <body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; background-color: #f5f9fc; color: #333; padding: 20px; max-width: 1000px; margin: 0 auto;">
 
-    <!-- [Previous header and main content remains exactly the same] -->
+    <header style="text-align: center; margin-bottom: 30px; padding: 20px 0; border-bottom: 1px solid #e1e8ed;">
+        <h1 style="color: #00428b; font-size: 2.2rem; margin-bottom: 10px;">ALV Laskuri</h1>
+        <p style="color: #666; font-size: 1.1rem;">Laske arvonlisävero helposti suomalaisilla verokannoilla</p>
+    </header>
+
+    <main style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+        <!-- Calculator Container -->
+        <div style="flex: 1; min-width: 350px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 66, 139, 0.1); overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #00428b 0%, #44d9f9 100%); color: white; padding: 20px;">
+                <h2 style="margin: 0; font-size: 1.4rem;">Arvonlisäveron laskenta</h2>
+            </div>
+            
+            <div style="padding: 20px;">
+                <!-- Calculation Type Selection -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px; color: #00428b; font-size: 1.1rem;">Laskentatapa:</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button id="tyyppi-netto" onclick="valitseLaskentatapa('netto')" style="flex: 1; padding: 12px; background-color: #44d9f9; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Nettosumma → ALV</button>
+                        <button id="tyyppi-brutto" onclick="valitseLaskentatapa('brutto')" style="flex: 1; padding: 12px; background-color: #e9ecef; border: none; border-radius: 5px; cursor: pointer;">Bruttosumma → ALV</button>
+                    </div>
+                </div>
+                
+                <!-- VAT Rate Selection -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px; color: #00428b; font-size: 1.1rem;">ALV-prosentti:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <button onclick="asetaAlvProsentti(24)" style="padding: 10px; background-color: #ecf5fc; border: 1px solid #d1e3f6; border-radius: 5px; cursor: pointer;">24% (yleinen)</button>
+                        <button onclick="asetaAlvProsentti(14)" style="padding: 10px; background-color: #ecf5fc; border: 1px solid #d1e3f6; border-radius: 5px; cursor: pointer;">14% (ruoka)</button>
+                        <button onclick="asetaAlvProsentti(10)" style="padding: 10px; background-color: #ecf5fc; border: 1px solid #d1e3f6; border-radius: 5px; cursor: pointer;">10% (kirjat, lääkkeet)</button>
+                    </div>
+                    <div style="margin-top: 10px; display: flex;">
+                        <input id="oma-alv" type="number" min="0" max="100" step="0.1" placeholder="Oma %" style="flex: 1; padding: 10px; border: 1px solid #d1e3f6; border-radius: 5px 0 0 5px; border-right: none;">
+                        <button onclick="asetaOmaAlv()" style="padding: 10px 15px; background-color: #ecf5fc; border: 1px solid #d1e3f6; border-radius: 0 5px 5px 0; cursor: pointer;">Käytä</button>
+                    </div>
+                </div>
+                
+                <!-- Input Field -->
+                <div style="margin-bottom: 20px;">
+                    <label for="summa" style="display: block; margin-bottom: 8px; color: #00428b; font-weight: 500;" id="summa-otsikko">Nettosumma (ilman ALV:ta):</label>
+                    <div style="position: relative;">
+                        <input id="summa" type="number" min="0" step="0.01" placeholder="0,00" style="width: 100%; padding: 15px 15px 15px 40px; font-size: 1.2rem; border: 2px solid #d1e3f6; border-radius: 5px;">
+                        <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-weight: bold; color: #666;">€</span>
+                    </div>
+                </div>
+                
+                <!-- Calculate Button -->
+                <button onclick="laskeAlv()" style="width: 100%; padding: 15px; background-color: #00428b; color: white; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-bottom: 20px; transition: background-color 0.3s;">Laske ALV</button>
+                
+                <!-- Results -->
+                <div id="tulokset" style="display: none; background-color: #ecf5fc; border-radius: 5px; padding: 20px; margin-bottom: 15px;">
+                    <h3 style="margin-bottom: 15px; color: #00428b; text-align: center;">Laskennan tulokset</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <p style="color: #666; margin-bottom: 5px;">Nettosumma:</p>
+                            <p id="nettosumma" style="font-size: 1.3rem; font-weight: bold;">0,00 €</p>
+                        </div>
+                        <div>
+                            <p style="color: #666; margin-bottom: 5px;">ALV-summa:</p>
+                            <p id="alv-summa" style="font-size: 1.3rem; font-weight: bold; color: #00428b;">0,00 €</p>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <p style="color: #666; margin-bottom: 5px;">Bruttosumma:</p>
+                            <p id="bruttosumma" style="font-size: 1.5rem; font-weight: bold; color: #00428b;">0,00 €</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Save Results -->
+                <div id="tallenna-tulokset" style="display: none;">
+                    <button onclick="tallennaTulokset()" style="width: 100%; padding: 12px; background-color: #44d9f9; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; margin-bottom: 10px;">Tallenna tulokset</button>
+                    <div id="tallennetut-tulokset" style="max-height: 150px; overflow-y: auto; border: 1px solid #d1e3f6; border-radius: 5px; padding: 10px; background-color: white;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Information Section -->
+        <div style="flex: 1; min-width: 350px; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 66, 139, 0.1); overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #00428b 0%, #44d9f9 100%); color: white; padding: 20px;">
+                <h2 style="margin: 0; font-size: 1.4rem;">ALV-tiedot</h2>
+            </div>
+            
+            <div style="padding: 20px;">
+                <h3 style="color: #00428b; margin-bottom: 15px; font-size: 1.2rem;">Suomen ALV-kannat 2024</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e1e8ed;">
+                        <span style="font-weight: 500;">Yleinen korko</span>
+                        <span style="font-weight: bold; color: #00428b;">24%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e1e8ed;">
+                        <span style="font-weight: 500;">Ruoka ja elintarvikkeet</span>
+                        <span style="font-weight: bold; color: #00428b;">14%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e1e8ed;">
+                        <span style="font-weight: 500;">Kirjat, lääkkeet</span>
+                        <span style="font-weight: bold; color: #00428b;">10%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                        <span style="font-weight: 500;">Lehtien tilaukset</span>
+                        <span style="font-weight: bold; color: #00428b;">10%</span>
+                    </div>
+                </div>
+                
+                <h3 style="color: #00428b; margin: 25px 0 15px; font-size: 1.2rem;">Miten ALV lasketaan?</h3>
+                <div style="background-color: #ecf5fc; border-radius: 5px; padding: 15px; margin-bottom: 20px;">
+                    <p style="margin-bottom: 10px;"><strong>Nettosumma → Bruttosumma:</strong></p>
+                    <p style="margin-bottom: 5px;">ALV = Nettosumma × (ALV% / 100)</p>
+                    <p>Bruttosumma = Nettosumma + ALV</p>
+                    
+                    <p style="margin: 15px 0 10px;"><strong>Bruttosumma → Nettosumma:</strong></p>
+                    <p style="margin-bottom: 5px;">Nettosumma = Bruttosumma / (1 + (ALV% / 100))</p>
+                    <p>ALV = Bruttosumma - Nettosumma</p>
+                </div>
+                
+                <div style="background-color: #f8f9fa; border-radius: 5px; padding: 15px; border: 1px solid #e1e8ed;">
+                    <h4 style="color: #00428b; margin-bottom: 10px;">Hyödyllisiä vinkkejä</h4>
+                    <ul style="padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">Voit käyttää omia ALV-prosentteja syöttämällä arvon ja painamalla "Käytä"</li>
+                        <li style="margin-bottom: 8px;">Tallennetut tulokset säilyvät selaimessasi</li>
+                        <li>Voit laskea sekä netto- että bruttosummista</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; color: #666; font-size: 0.9rem; border-top: 1px solid #e1e8ed;">
         <p>© 2025 ALV Laskuri - Helppo arvonlisäveron laskenta verkossa</p>
