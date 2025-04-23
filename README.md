@@ -27,3 +27,9 @@ Helppo ja tehokas verkkotyökalu arvonlisäveron (ALV) laskemiseen suomalaisilla
    git clone https://github.com/sofiamayerdev/alv-laskuri.git
    cd alv-laskuri
    # Avaa index.html selaimessa
+
+ ## Ota Yhteyttä
+
+1. GitHub: [@sofiamayerdev](https://github.com/sofiamayerdev)
+2. Twitter/X: [@sofiamayer_dev](https://x.com/sofiamayer_dev)
+3. Reddit: [u/sofiamayer_dev](https://www.reddit.com/user/sofiamayer_dev/)
