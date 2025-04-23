@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Helppo ALV laskuri - Laske arvonlisävero helposti eri verokannoilla. Täydellinen työkalu yrityksille ja yksityishenkilöille.">
+    <meta name="keywords" content="alv laskuri, arvonlisäverolaskuri, verolaskuri, alv prosentti, alv laskenta, nettilaskin alv">
+    <meta property="og:title" content="ALV Laskuri - Helppo arvonlisäveron laskenta">
+    <meta property="og:description" content="Laske arvonlisävero helposti suomalaisilla verokannoilla. Sopii yrityksille ja yksityishenkilöille.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sofiamayerdev.github.io/alv-laskuri">
+    <title>ALV Laskuri - Laske arvonlisävero helposti | Nettilaskin</title>
+    <style>
+        /* Basic reset for consistency across browsers */
+        body, h1, h2, h3, p, ul, li, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; background-color: #f5f9fc; color: #333; padding: 20px; max-width: 1000px; margin: 0 auto;">
+
+    <!-- [Previous header and main content remains exactly the same] -->
+
+    <footer style="text-align: center; margin-top: 40px; padding: 20px 0; color: #666; font-size: 0.9rem; border-top: 1px solid #e1e8ed;">
+        <p>© 2025 ALV Laskuri - Helppo arvonlisäveron laskenta verkossa</p>
+        <p style="margin-top: 5px;">Tämä työkalu on tarkoitettu vain yleisiin laskelmiin. Virallista käyttöä varten tarkista aina verottajan ohjeet.</p>
+        
+        <div style="margin-top: 20px;">
+            <p style="margin-bottom: 10px;">Seuraa minua sosiaalisessa mediassa:</p>
+            <div style="display: flex; justify-content: center; gap: 15px;">
+                <a href="https://github.com/sofiamayerdev" target="_blank" rel="noopener noreferrer" style="color: #00428b; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                    GitHub
+                </a>
+                <a href="https://x.com/sofiamayer_dev" target="_blank" rel="noopener noreferrer" style="color: #00428b; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                    </svg>
+                    Twitter/X
+                </a>
+                <a href="https://www.reddit.com/user/sofiamayer_dev/" target="_blank" rel="noopener noreferrer" style="color: #00428b; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="13" r="1"></circle><circle cx="15" cy="13" r="1"></circle>
+                        <path d="M19 8h1a2 2 0 0 1 2 2v8a6 6 0 0 1-6 6H8a6 6 0 0 1-6-6v-8a2 2 0 0 1 2-2h1"></path>
+                        <path d="M12 2c1.4 0 2.8.5 3.9 1.4"></path>
+                    </svg>
+                    Reddit
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Muuttujat
+        let laskentatapa = 'netto';
+        let alvProsentti = 24;
+        let tallennetutLaskelmat = JSON.parse(localStorage.getItem('alvLaskelmat')) || [];
+        
+        // Alustus
+        document.addEventListener('DOMContentLoaded', function() {
+            paivitaLaskentatapaNappi();
+            naytaTallennetutTulokset();
+            
+            // Lisää tapahtumankuuntelija enter-näppäimelle
+            document.getElementById('summa').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    laskeAlv();
+                }
+            });
+        });
+        
+        // Laskentatavan valinta
+        function valitseLaskentatapa(tyyppi) {
+            laskentatapa = tyyppi;
+            paivitaLaskentatapaNappi();
+            paivitaSummaOtsikko();
+        }
+        
+        function paivitaLaskentatapaNappi() {
+            document.getElementById('tyyppi-netto').style.backgroundColor = laskentatapa === 'netto' ? '#44d9f9' : '#e9ecef';
+            document.getElementById('tyyppi-netto').style.color = laskentatapa === 'netto' ? 'white' : '#333';
+            document.getElementById('tyyppi-brutto').style.backgroundColor = laskentatapa === 'brutto' ? '#44d9f9' : '#e9ecef';
+            document.getElementById('tyyppi-brutto').style.color = laskentatapa === 'brutto' ? 'white' : '#333';
+        }
+        
+        function paivitaSummaOtsikko() {
+            const otsikko = document.getElementById('summa-otsikko');
+            otsikko.textContent = laskentatapa === 'netto' 
+                ? 'Nettosumma (ilman ALV:ta):' 
+                : 'Bruttosumma (sis. ALV:n):';
+        }
+        
+        // ALV-prosentin asetus
+        function asetaAlvProsentti(prosentti) {
+            alvProsentti = prosentti;
+            // Korosta valittu painike
+            const painikkeet = document.querySelectorAll('[onclick^="asetaAlvProsentti"]');
+            painikkeet.forEach(btn => {
+                btn.style.backgroundColor = btn.textContent.includes(prosentti + '%') ? '#d1e3f6' : '#ecf5fc';
+                btn.style.fontWeight = btn.textContent.includes(prosentti + '%') ? 'bold' : 'normal';
+            });
+        }
+        
+        function asetaOmaAlv() {
+            const omaAlvInput = document.getElementById('oma-alv');
+            const arvo = parseFloat(omaAlvInput.value);
+            
+            if (!isNaN(arvo) && arvo >= 0 && arvo <= 100) {
+                alvProsentti = arvo;
+                omaAlvInput.value = '';
+                // Poista muiden ALV-painikkeiden korostus
+                document.querySelectorAll('[onclick^="asetaAlvProsentti"]').forEach(btn => {
+                    btn.style.backgroundColor = '#ecf5fc';
+                    btn.style.fontWeight = 'normal';
+                });
+            } else {
+                alert('Anna kelvollinen prosentti (0-100)');
+            }
+        }
+        
+        // ALV:n laskenta
+        function laskeAlv() {
+            const summaInput = document.getElementById('summa');
+            const summa = parseFloat(summaInput.value.replace(',', '.'));
+            
+            if (isNaN(summa) || summa < 0) {
+                alert('Anna kelvollinen summa');
+                return;
+            }
+            
+            let netto, alv, brutto;
+            
+            if (laskentatapa === 'netto') {
+                netto = summa;
+                alv = netto * (alvProsentti / 100);
+                brutto = netto + alv;
+            } else {
+                brutto = summa;
+                netto = brutto / (1 + (alvProsentti / 100));
+                alv = brutto - netto;
+            }
+            
+            // Näytä tulokset
+            naytaTulokset(netto, alv, brutto);
+            
+            // Näytä tallennusmahdollisuus
+            document.getElementById('tallenna-tulokset').style.display = 'block';
+        }
+        
+        function naytaTulokset(netto, alv, brutto) {
+            document.getElementById('nettosumma').textContent = netto.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('alv-summa').textContent = alv.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('bruttosumma').textContent = brutto.toFixed(2).replace('.', ',') + ' €';
+            document.getElementById('tulokset').style.display = 'block';
+        }
+        
+        // Tulosten tallennus
+        function tallennaTulokset() {
+            const netto = document.getElementById('nettosumma').textContent;
+            const alv = document.getElementById('alv-summa').textContent;
+            const brutto = document.getElementById('bruttosumma').textContent;
+            
+            const laskelma = {
+                paivamaara: new Date().toLocaleString('fi-FI'),
+                alvProsentti: alvProsentti + '%',
+                netto,
+                alv,
+                brutto
+            };
+            
+            tallennetutLaskelmat.unshift(laskelma); // Lisää uusin ensimmäiseksi
+            if (tallennetutLaskelmat.length > 5) {
+                tallennetutLaskelmat = tallennetutLaskelmat.slice(0, 5); // Rajoita 5 viimeisimpään
+            }
+            
+            localStorage.setItem('alvLaskelmat', JSON.stringify(tallennetutLaskelmat));
+            naytaTallennetutTulokset();
+        }
+        
+        function naytaTallennetutTulokset() {
+            const container = document.getElementById('tallennetut-tulokset');
+            container.innerHTML = '';
+            
+            if (tallennetutLaskelmat.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center;">Ei tallennettuja tuloksia</p>';
+                return;
+            }
+            
+            tallennetutLaskelmat.forEach(laskelma => {
+                const div = document.createElement('div');
+                div.style.padding = '10px';
+                div.style.borderBottom = '1px solid #e1e8ed';
+                div.style.fontSize = '0.9rem';
+                
+                div.innerHTML = `
+                    <p style="color: #00428b; font-weight: bold; margin-bottom: 5px;">${laskelma.paivamaara} (${laskelma.alvProsentti})</p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Netto:</span>
+                        <span>${laskelma.netto}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>ALV:</span>
+                        <span>${laskelma.alv}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; margin-top: 3px;">
+                        <span>Brutto:</span>
+                        <span>${laskelma.brutto}</span>
+                    </div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
